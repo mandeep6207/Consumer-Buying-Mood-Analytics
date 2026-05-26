@@ -33,6 +33,22 @@ Consumer Buying Mood Analytics System
 8. Report generation
 9. Notebook generation
 
+## Workflow Architecture
+
+```mermaid
+flowchart LR
+	A[Raw / Synthetic Behavior Data] --> B[Validation & Missingness Reports]
+	B --> C[Categorical Normalization]
+	C --> D[Outlier Capping]
+	D --> E[Feature Engineering]
+	E --> F[Session & Segmentation Analytics]
+	F --> G[Preprocessing Pipeline]
+	G --> H[Model Training & Comparison]
+	H --> I[Metrics, Reports, Visuals, Notebook]
+```
+
+The pipeline is intentionally leakage-aware: the model consumes only engineered customer behavior signals, while the reporting layer separately documents data quality, class balance, session patterns, and segmentation output.
+
 ## Setup
 
 ```bash
@@ -72,7 +88,21 @@ The project evaluates three supervised classifiers on the same leakage-safe prep
 
 ## Results
 
-The synthetic dataset is intentionally noisy but structured so that realistic models land in a strong high-accuracy band without perfect scores.
+The current committed benchmark lands in a realistic high-performance range without artificial perfection:
+
+- Best model: XGBoost in the latest exported comparison
+- Accuracy band: roughly 90% to 97%
+- Weighted F1: strong but not saturated, with no 1.00 global metrics
+- Class balance: preserved across all five mood categories through the synthetic generator
+
+The repository also exports supporting analytics artifacts that help explain the model behavior:
+
+- `reports/data_quality.json`
+- `reports/missing_value_profile.json`
+- `reports/session_analysis.json`
+- `reports/customer_segments.json`
+- `reports/advanced_correlation_profile.json`
+- `reports/model_metrics.json`
 
 ## Future Scope
 
