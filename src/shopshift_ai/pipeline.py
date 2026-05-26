@@ -84,6 +84,7 @@ RAW_NUMERIC_FEATURES = [
     "impulsive_clicks",
 ]
 CATEGORICAL_FEATURES = ["gender", "preferred_category"]
+MODEL_FEATURE_COLUMNS = NUMERIC_FEATURES + CATEGORICAL_FEATURES
 
 
 @dataclass
@@ -531,6 +532,7 @@ def build_preprocessor() -> ColumnTransformer:
             ("numeric", numeric_pipeline, NUMERIC_FEATURES),
             ("categorical", categorical_pipeline, CATEGORICAL_FEATURES),
         ]
+        , remainder="drop", verbose_feature_names_out=False
     )
 
 
@@ -935,7 +937,7 @@ def evaluate_and_export() -> dict[str, Any]:
     normalized_preview = normalize_numeric_columns(engineered)
     _ = normalized_preview
 
-    features = engineered.drop(columns=["user_id", TARGET])
+    features = engineered[MODEL_FEATURE_COLUMNS].copy()
     target = engineered[TARGET]
     label_encoder = LabelEncoder()
     encoded_target = label_encoder.fit_transform(target)
