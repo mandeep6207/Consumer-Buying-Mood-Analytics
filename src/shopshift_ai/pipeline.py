@@ -60,6 +60,7 @@ NUMERIC_FEATURES = [
     "spending_efficiency",
     "shopping_intensity",
     "engagement_score",
+    "conversion_probability",
     "browsing_pressure",
     "discount_dependency",
     "emotional_purchase_index",
@@ -327,6 +328,15 @@ def engineer_features(dataframe: pd.DataFrame) -> pd.DataFrame:
         + 0.06 * (engineered["avg_spending"] / 100)
     )
     engineered["engagement_score"] = 0.40 * engineered["shopping_intensity"] + 0.30 * engineered["browsing_time"] + 0.18 * engineered["late_night_activity"] + 0.12 * engineered["impulsive_clicks"]
+    conversion_base = (
+        0.24 * engineered["purchase_frequency"]
+        + 0.18 * engineered["cart_items"]
+        + 0.16 * engineered["engagement_score"]
+        + 0.14 * engineered["discount_usage"]
+        + 0.10 * engineered["avg_spending"] / 100
+        - 0.12 * np.maximum(25 - engineered["income"] / 5000, 0)
+    )
+    engineered["conversion_probability"] = 1 / (1 + np.exp(-(conversion_base - conversion_base.mean()) / 12))
     engineered["browsing_pressure"] = 0.45 * engineered["browsing_time"] + 0.30 * engineered["impulsive_clicks"] + 0.15 * engineered["late_night_activity"]
     engineered["discount_dependency"] = (
         0.62 * engineered["discount_usage"]
