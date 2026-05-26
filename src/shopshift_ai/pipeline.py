@@ -573,16 +573,16 @@ def train_models(train_features: pd.DataFrame, train_target: pd.Series, test_fea
                     (
                         "model",
                         LogisticRegression(
-                            max_iter=2000,
+                            max_iter=3000,
                             solver="lbfgs",
-                            C=1.8,
+                            C=2.2,
                             class_weight="balanced",
                             random_state=RANDOM_STATE,
                         ),
                     ),
                 ]
             ),
-            {"model__C": [0.8, 1.2, 1.8]},
+            {"model__C": [1.4, 1.8, 2.2, 2.8]},
         ),
         "Random Forest": (
             Pipeline(
