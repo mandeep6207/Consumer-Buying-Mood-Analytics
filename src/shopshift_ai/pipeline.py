@@ -797,8 +797,10 @@ def plot_feature_importance(estimator: Pipeline) -> None:
 
 def plot_confusion_matrix(target: np.ndarray, predictions: np.ndarray) -> None:
     matrix = confusion_matrix(target, predictions, labels=list(range(len(MOODS))))
+    normalized = matrix / matrix.sum(axis=1, keepdims=True)
     plt.figure(figsize=(10, 8))
-    sns.heatmap(matrix, annot=True, fmt="d", cmap="Blues", xticklabels=MOODS, yticklabels=MOODS)
+    labels = np.array([[f"{count}\n{percent:.0%}" for count, percent in zip(row_counts, row_percentages)] for row_counts, row_percentages in zip(matrix, normalized)])
+    sns.heatmap(matrix, annot=labels, fmt="", cmap="Blues", xticklabels=MOODS, yticklabels=MOODS)
     plt.xlabel("Predicted")
     plt.ylabel("Actual")
     plt.title("Confusion Matrix")
