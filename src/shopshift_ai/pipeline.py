@@ -43,6 +43,7 @@ OUTLIER_REPORT = REPORTS_DIR / "outlier_profile.json"
 ENGAGEMENT_REPORT = REPORTS_DIR / "engagement_profile.json"
 CORRELATION_REPORT = REPORTS_DIR / "advanced_correlation_profile.json"
 SPLIT_PROFILE_REPORT = REPORTS_DIR / "split_profile.json"
+CROSS_VALIDATION_REPORT = REPORTS_DIR / "cross_validation_profile.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -632,10 +633,14 @@ def train_models(train_features: pd.DataFrame, train_target: pd.Series, test_fea
     }
 
     results: dict[str, ModelResult] = {}
+    cross_validation_profile: dict[str, Any] = {}
     for model_name, (pipeline, params) in models.items():
         search = GridSearchCV(pipeline, params, cv=3, scoring="accuracy", n_jobs=1)
         search.fit(train_features, train_target)
         best_estimator = search.best_estimator_
+        cross_validation_profile[model_name] = {
+            "mean_accuracy": round(compute_cv_score(best_estimator, train_features, train_target), 4),
+        }
         predictions = best_estimator.predict(test_features)
         result = ModelResult(
             name=model_name,
@@ -648,6 +653,8 @@ def train_models(train_features: pd.DataFrame, train_target: pd.Series, test_fea
             predictions=predictions,
         )
         results[model_name] = result
+
+    CROSS_VALIDATION_REPORT.write_text(json.dumps(cross_validation_profile, indent=2), encoding="utf-8")
 
     best_name = max(results, key=lambda name: results[name].accuracy)
     return results, best_name, results[best_name].estimator
