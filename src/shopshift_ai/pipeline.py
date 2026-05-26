@@ -328,7 +328,12 @@ def engineer_features(dataframe: pd.DataFrame) -> pd.DataFrame:
     )
     engineered["engagement_score"] = 0.40 * engineered["shopping_intensity"] + 0.30 * engineered["browsing_time"] + 0.18 * engineered["late_night_activity"] + 0.12 * engineered["impulsive_clicks"]
     engineered["browsing_pressure"] = 0.45 * engineered["browsing_time"] + 0.30 * engineered["impulsive_clicks"] + 0.15 * engineered["late_night_activity"]
-    engineered["discount_dependency"] = 0.70 * engineered["discount_usage"] + 0.12 * np.maximum(55 - engineered["purchase_frequency"], 0)
+    engineered["discount_dependency"] = (
+        0.62 * engineered["discount_usage"]
+        + 0.14 * np.maximum(60 - engineered["purchase_frequency"] * 3, 0)
+        + 0.10 * np.maximum(220 - engineered["avg_spending"], 0) / 10
+        + 0.08 * np.maximum(40 - engineered["income"] / 4000, 0)
+    )
     engineered["emotional_purchase_index"] = 0.40 * engineered["late_night_activity"] + 0.28 * engineered["impulsive_clicks"] + 0.18 * engineered["cart_items"] + 0.08 * engineered["browsing_time"]
     return engineered
 
