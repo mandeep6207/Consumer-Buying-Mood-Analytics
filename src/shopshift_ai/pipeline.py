@@ -437,12 +437,14 @@ def analyze_session_behavior(dataframe: pd.DataFrame) -> dict[str, Any]:
     session_frame = dataframe.copy()
     session_frame["session_depth_estimate"] = session_frame["browsing_time"] * 0.55 + session_frame["cart_items"] * 2.1 + session_frame["impulsive_clicks"] * 0.9
     session_frame["night_session_ratio"] = np.where(session_frame["late_night_activity"] > 50, 1.0, 0.0)
+    session_frame["peak_session_score"] = session_frame["session_depth_estimate"] * 0.65 + session_frame["night_session_ratio"] * 8 + session_frame["engagement_score"] * 0.12
     grouped = session_frame.groupby(TARGET).agg(
         browsing_time_mean=("browsing_time", "mean"),
         cart_items_mean=("cart_items", "mean"),
         impulsive_clicks_mean=("impulsive_clicks", "mean"),
         session_depth_mean=("session_depth_estimate", "mean"),
         night_session_rate=("night_session_ratio", "mean"),
+        peak_session_score=("peak_session_score", "mean"),
     )
     return grouped.round(4).to_dict(orient="index")
 
