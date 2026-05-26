@@ -1,0 +1,11 @@
+{
+  "Logistic Regression": {
+    "mean_accuracy": 0.9209
+  },
+  "Random Forest": {
+    "mean_accuracy": 0.9145
+  },
+  "XGBoost": {
+    "mean_accuracy": 0.9151
+  }
+}

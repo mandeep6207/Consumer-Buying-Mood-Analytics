@@ -5,13 +5,13 @@ Predict consumer buying mood from shopping behavior and surface behavioral signa
 
 ## Best Model
 - **XGBoost**
-- Test Accuracy: 0.9333
-- Weighted F1: 0.9333
+- Test Accuracy: 0.9299
+- Weighted F1: 0.9299
 
 ## Model Comparison
-- Logistic Regression: accuracy=0.9271, precision=0.9281, recall=0.9271, f1=0.9270, cv=0.9219
-- Random Forest: accuracy=0.9250, precision=0.9260, recall=0.9250, f1=0.9249, cv=0.9167
-- XGBoost: accuracy=0.9333, precision=0.9349, recall=0.9333, f1=0.9333, cv=0.9146
+- XGBoost: accuracy=0.9299, precision=0.9307, recall=0.9299, f1=0.9299, cv=0.9177, gap=0.0000
+- Logistic Regression: accuracy=0.9280, precision=0.9290, recall=0.9280, f1=0.9280, cv=0.9156, gap=0.0019
+- Random Forest: accuracy=0.9242, precision=0.9255, recall=0.9242, f1=0.9242, cv=0.9156, gap=0.0057
 
 ## Behavioral Insights
 - Late night activity and impulsive clicks separate emotional and impulsive buyers.

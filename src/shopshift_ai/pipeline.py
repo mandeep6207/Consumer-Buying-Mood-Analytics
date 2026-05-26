@@ -371,14 +371,6 @@ def impute_missing_values(dataframe: pd.DataFrame) -> pd.DataFrame:
 
 
 
-def normalize_numeric_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
-    normalized = dataframe.copy()
-    scaler = StandardScaler()
-    normalized[RAW_NUMERIC_FEATURES] = scaler.fit_transform(normalized[RAW_NUMERIC_FEATURES])
-    return normalized
-
-
-
 def normalize_behavioral_metrics(dataframe: pd.DataFrame) -> pd.DataFrame:
     normalized = dataframe.copy()
     behavior_columns = [
@@ -992,8 +984,6 @@ def evaluate_and_export() -> dict[str, Any]:
     ENGAGEMENT_REPORT.write_text(json.dumps(engagement_report, indent=2), encoding="utf-8")
     correlation_report = summarize_advanced_correlations(engineered)
     CORRELATION_REPORT.write_text(json.dumps(correlation_report, indent=2), encoding="utf-8")
-    normalized_preview = normalize_numeric_columns(engineered)
-    _ = normalized_preview
 
     features = engineered[MODEL_FEATURE_COLUMNS].copy()
     target = engineered[TARGET]

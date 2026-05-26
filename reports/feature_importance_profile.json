@@ -1,0 +1,76 @@
+{
+  "top_features": [
+    {
+      "feature": "preferred_category_Beauty",
+      "importance": 0.125638
+    },
+    {
+      "feature": "preferred_category_Home",
+      "importance": 0.103258
+    },
+    {
+      "feature": "discount_usage",
+      "importance": 0.096826
+    },
+    {
+      "feature": "preferred_category_Groceries",
+      "importance": 0.087916
+    },
+    {
+      "feature": "preferred_category_Luxury",
+      "importance": 0.064706
+    },
+    {
+      "feature": "income",
+      "importance": 0.063354
+    },
+    {
+      "feature": "late_night_activity",
+      "importance": 0.057179
+    },
+    {
+      "feature": "preferred_category_Electronics",
+      "importance": 0.051677
+    },
+    {
+      "feature": "emotional_purchase_index",
+      "importance": 0.050113
+    },
+    {
+      "feature": "impulse_score",
+      "importance": 0.042324
+    },
+    {
+      "feature": "preferred_category_Fashion",
+      "importance": 0.034488
+    },
+    {
+      "feature": "impulsive_clicks",
+      "importance": 0.034181
+    },
+    {
+      "feature": "browsing_time",
+      "importance": 0.034155
+    },
+    {
+      "feature": "avg_spending",
+      "importance": 0.02591
+    },
+    {
+      "feature": "discount_dependency",
+      "importance": 0.023248
+    },
+    {
+      "feature": "engagement_score",
+      "importance": 0.018344
+    },
+    {
+      "feature": "purchase_frequency",
+      "importance": 0.014879
+    },
+    {
+      "feature": "browsing_pressure",
+      "importance": 0.012812
+    }
+  ]
+}
