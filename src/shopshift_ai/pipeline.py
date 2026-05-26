@@ -667,8 +667,10 @@ def plot_impulse_heatmap(dataframe: pd.DataFrame) -> None:
         "emotional_purchase_index",
     ]
     corr = dataframe[corr_columns].corr()
-    sns.heatmap(corr, cmap="coolwarm", center=0, linewidths=0.5)
-    plt.title("Impulse and Behavioral Feature Heatmap")
+    focus_columns = ["discount_usage", "purchase_frequency", "avg_spending", "income", "discount_dependency"]
+    focus = corr.loc[focus_columns, focus_columns]
+    sns.heatmap(focus, cmap="coolwarm", center=0, linewidths=0.5, annot=True, fmt=".2f", square=True)
+    plt.title("Discount Dependency and Behavioral Correlation Heatmap")
     plt.tight_layout()
     plt.savefig(VISUALS_DIR / "impulse_heatmap.png", dpi=220)
     plt.close()
