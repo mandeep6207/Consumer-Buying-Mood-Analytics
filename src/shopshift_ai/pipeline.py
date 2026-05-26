@@ -622,9 +622,13 @@ def plot_mood_distribution(dataframe: pd.DataFrame) -> None:
 
 def plot_spending_behavior(dataframe: pd.DataFrame) -> None:
     plt.figure(figsize=(11, 6))
-    sns.boxplot(data=dataframe, x=TARGET, y="avg_spending", hue=TARGET, palette="viridis", legend=False)
+    ax = sns.boxplot(data=dataframe, x=TARGET, y="avg_spending", hue=TARGET, palette="viridis", legend=False)
+    sns.stripplot(data=dataframe.sample(min(len(dataframe), 500), random_state=RANDOM_STATE), x=TARGET, y="avg_spending", color="white", alpha=0.28, size=2, jitter=0.22)
+    for mood, value in dataframe.groupby(TARGET)["avg_spending"].mean().items():
+        ax.axhline(value, linestyle="--", linewidth=1, alpha=0.18, color="black")
     plt.xticks(rotation=20, ha="right")
     plt.title("Spending Behavior by Buying Mood")
+    plt.ylabel("Average Spending ($)")
     plt.tight_layout()
     plt.savefig(VISUALS_DIR / "spending_behavior.png", dpi=220)
     plt.close()
