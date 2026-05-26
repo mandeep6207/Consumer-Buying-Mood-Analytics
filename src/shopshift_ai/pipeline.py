@@ -39,6 +39,7 @@ NORMALIZED_BEHAVIOR_REPORT = REPORTS_DIR / "normalized_behavior_profile.json"
 SESSION_ANALYSIS_REPORT = REPORTS_DIR / "session_analysis.json"
 CUSTOMER_SEGMENT_REPORT = REPORTS_DIR / "customer_segments.json"
 BEHAVIOR_SCALE_REPORT = REPORTS_DIR / "behavior_scale_profile.json"
+OUTLIER_REPORT = REPORTS_DIR / "outlier_profile.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -386,6 +387,26 @@ def normalize_behavioral_metrics(dataframe: pd.DataFrame) -> pd.DataFrame:
     scaler = RobustScaler()
     normalized[behavior_columns] = scaler.fit_transform(normalized[behavior_columns])
     return normalized
+
+
+
+def cap_outliers(dataframe: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
+    capped = dataframe.copy()
+    summary: dict[str, Any] = {}
+    for column in RAW_NUMERIC_FEATURES:
+        lower_quartile = capped[column].quantile(0.25)
+        upper_quartile = capped[column].quantile(0.75)
+        interquartile_range = upper_quartile - lower_quartile
+        lower_bound = lower_quartile - 1.5 * interquartile_range
+        upper_bound = upper_quartile + 1.5 * interquartile_range
+        summary[column] = {
+            "lower_bound": round(float(lower_bound), 4),
+            "upper_bound": round(float(upper_bound), 4),
+            "clipped_low": int((capped[column] < lower_bound).sum()),
+            "clipped_high": int((capped[column] > upper_bound).sum()),
+        }
+        capped[column] = capped[column].clip(lower_bound, upper_bound)
+    return capped, summary
 
 
 
@@ -810,7 +831,9 @@ def evaluate_and_export() -> dict[str, Any]:
     categorical_profile = summarize_categorical_distribution(imputed)
     CATEGORICAL_PROFILE_REPORT.write_text(json.dumps(categorical_profile, indent=2), encoding="utf-8")
     imputed = normalize_categorical_fields(imputed)
-    engineered = engineer_features(imputed)
+    outlier_capped, outlier_profile = cap_outliers(imputed)
+    OUTLIER_REPORT.write_text(json.dumps(outlier_profile, indent=2), encoding="utf-8")
+    engineered = engineer_features(outlier_capped)
     normalized_behaviors = normalize_behavioral_metrics(engineered)
     behavior_profile = {
         column: {
