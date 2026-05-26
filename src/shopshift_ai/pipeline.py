@@ -44,6 +44,7 @@ ENGAGEMENT_REPORT = REPORTS_DIR / "engagement_profile.json"
 CORRELATION_REPORT = REPORTS_DIR / "advanced_correlation_profile.json"
 SPLIT_PROFILE_REPORT = REPORTS_DIR / "split_profile.json"
 CROSS_VALIDATION_REPORT = REPORTS_DIR / "cross_validation_profile.json"
+FEATURE_IMPORTANCE_REPORT = REPORTS_DIR / "feature_importance_profile.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -786,6 +787,18 @@ def plot_feature_importance(estimator: Pipeline) -> None:
         importances = np.abs(model.coef_).mean(axis=0)
     feature_names = get_transformed_feature_names(estimator)
     series = pd.Series(importances, index=feature_names).sort_values(ascending=False).head(18)
+    FEATURE_IMPORTANCE_REPORT.write_text(
+        json.dumps(
+            {
+                "top_features": [
+                    {"feature": feature, "importance": round(float(score), 6)}
+                    for feature, score in series.items()
+                ]
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
     plt.figure(figsize=(12, 7))
     sns.barplot(x=series.values, y=series.index, hue=series.index, palette="crest", legend=False)
     plt.title("Top Feature Importance")
