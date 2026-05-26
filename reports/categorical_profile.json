@@ -1,0 +1,15 @@
+{
+  "gender_distribution": {
+    "Male": 1130,
+    "Female": 1109,
+    "Non-binary": 161
+  },
+  "preferred_category_distribution": {
+    "Fashion": 749,
+    "Beauty": 478,
+    "Groceries": 361,
+    "Electronics": 327,
+    "Luxury": 309,
+    "Home": 176
+  }
+}

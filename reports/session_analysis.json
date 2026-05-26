@@ -1,0 +1,42 @@
+{
+  "Budget Conscious": {
+    "browsing_time_mean": 21.2667,
+    "cart_items_mean": 3.6553,
+    "impulsive_clicks_mean": 3.1921,
+    "session_depth_mean": 22.2457,
+    "night_session_rate": 0.0305,
+    "peak_session_score": 16.4578
+  },
+  "Emotional Buyer": {
+    "browsing_time_mean": 26.7898,
+    "cart_items_mean": 6.1834,
+    "impulsive_clicks_mean": 8.7303,
+    "session_depth_mean": 35.5767,
+    "night_session_rate": 0.9659,
+    "peak_session_score": 34.6008
+  },
+  "Impulsive Buyer": {
+    "browsing_time_mean": 31.3199,
+    "cart_items_mean": 7.9,
+    "impulsive_clicks_mean": 11.6762,
+    "session_depth_mean": 44.3246,
+    "night_session_rate": 0.9267,
+    "peak_session_score": 40.0416
+  },
+  "Luxury Shopper": {
+    "browsing_time_mean": 19.6003,
+    "cart_items_mean": 5.0265,
+    "impulsive_clicks_mean": 4.0684,
+    "session_depth_mean": 24.9974,
+    "night_session_rate": 0.0353,
+    "peak_session_score": 18.4003
+  },
+  "Window Shopper": {
+    "browsing_time_mean": 41.966,
+    "cart_items_mean": 1.8726,
+    "impulsive_clicks_mean": 2.4231,
+    "session_depth_mean": 29.1945,
+    "night_session_rate": 0.0553,
+    "peak_session_score": 22.3351
+  }
+}

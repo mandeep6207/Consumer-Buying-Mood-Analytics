@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -525,11 +526,13 @@ def stratified_split(features: pd.DataFrame, target: pd.Series) -> tuple[pd.Data
         random_state=RANDOM_STATE,
         stratify=target,
     )
+    train_target_series = pd.Series(train_target)
+    test_target_series = pd.Series(test_target)
     split_profile = {
         "train_rows": int(len(train_features)),
         "test_rows": int(len(test_features)),
-        "train_class_balance": train_target.value_counts().to_dict(),
-        "test_class_balance": test_target.value_counts().to_dict(),
+        "train_class_balance": train_target_series.value_counts().to_dict(),
+        "test_class_balance": test_target_series.value_counts().to_dict(),
     }
     return train_features, test_features, train_target, test_target, split_profile
 
@@ -834,6 +837,7 @@ def export_model_outputs(results: dict[str, ModelResult], best_name: str, best_e
 
     metrics_payload = {
         "best_model": best_name,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
         "dataset_rows": int(len(dataset)),
         "class_balance": dataset[TARGET].value_counts().to_dict(),
         "models": {
@@ -853,6 +857,11 @@ def export_model_outputs(results: dict[str, ModelResult], best_name: str, best_e
             }
             for name, result in sorted(results.items(), key=lambda item: item[1].accuracy, reverse=True)
         ],
+        "leader_gap": round(
+            sorted((result.accuracy for result in results.values()), reverse=True)[0]
+            - sorted((result.accuracy for result in results.values()), reverse=True)[1],
+            4,
+        ) if len(results) > 1 else 0.0,
     }
     (REPORTS_DIR / "model_metrics.json").write_text(json.dumps(metrics_payload, indent=2), encoding="utf-8")
 

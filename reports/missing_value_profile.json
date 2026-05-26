@@ -1,0 +1,30 @@
+{
+  "row_count": 2400,
+  "columns_with_missing": [
+    "avg_spending",
+    "discount_usage",
+    "income",
+    "preferred_category"
+  ],
+  "missing_counts": {
+    "user_id": 0,
+    "age": 0,
+    "gender": 0,
+    "income": 61,
+    "browsing_time": 0,
+    "cart_items": 0,
+    "purchase_frequency": 0,
+    "discount_usage": 84,
+    "avg_spending": 58,
+    "preferred_category": 49,
+    "late_night_activity": 0,
+    "impulsive_clicks": 0,
+    "buying_mood": 0
+  },
+  "missing_rates": {
+    "income": 0.0254,
+    "discount_usage": 0.035,
+    "avg_spending": 0.0242,
+    "preferred_category": 0.0204
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "pearson_focus": {
+    "engagement_score": {
+      "engagement_score": 1.0,
+      "conversion_probability": 0.045,
+      "discount_dependency": -0.1822
+    },
+    "conversion_probability": {
+      "engagement_score": 0.045,
+      "conversion_probability": 1.0,
+      "discount_dependency": 0.8765
+    },
+    "discount_dependency": {
+      "engagement_score": -0.1822,
+      "conversion_probability": 0.8765,
+      "discount_dependency": 1.0
+    }
+  },
+  "top_spearman_pairs": [
+    {
+      "left": "discount_usage",
+      "right": "discount_dependency",
+      "strength": 0.9936
+    },
+    {
+      "left": "late_night_activity",
+      "right": "emotional_purchase_index",
+      "strength": 0.9918
+    },
+    {
+      "left": "shopping_intensity",
+      "right": "engagement_score",
+      "strength": 0.9874
+    },
+    {
+      "left": "impulse_score",
+      "right": "shopping_intensity",
+      "strength": 0.958
+    },
+    {
+      "left": "impulse_score",
+      "right": "engagement_score",
+      "strength": 0.9358
+    },
+    {
+      "left": "discount_usage",
+      "right": "conversion_probability",
+      "strength": 0.904
+    },
+    {
+      "left": "engagement_score",
+      "right": "emotional_purchase_index",
+      "strength": 0.8964
+    },
+    {
+      "left": "conversion_probability",
+      "right": "discount_dependency",
+      "strength": 0.8782
+    },
+    {
+      "left": "late_night_activity",
+      "right": "engagement_score",
+      "strength": 0.8564
+    },
+    {
+      "left": "shopping_intensity",
+      "right": "emotional_purchase_index",
+      "strength": 0.8558
+    }
+  ]
+}

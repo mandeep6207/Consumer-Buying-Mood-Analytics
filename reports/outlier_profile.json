@@ -1,0 +1,56 @@
+{
+  "age": {
+    "lower_bound": 7.8455,
+    "upper_bound": 57.8903,
+    "clipped_low": 0,
+    "clipped_high": 12
+  },
+  "income": {
+    "lower_bound": 4453.3788,
+    "upper_bound": 116485.8087,
+    "clipped_low": 0,
+    "clipped_high": 271
+  },
+  "browsing_time": {
+    "lower_bound": -2.6975,
+    "upper_bound": 56.7825,
+    "clipped_low": 0,
+    "clipped_high": 34
+  },
+  "cart_items": {
+    "lower_bound": -5.5,
+    "upper_bound": 14.5,
+    "clipped_low": 0,
+    "clipped_high": 15
+  },
+  "purchase_frequency": {
+    "lower_bound": -3.6512,
+    "upper_bound": 15.6787,
+    "clipped_low": 0,
+    "clipped_high": 3
+  },
+  "discount_usage": {
+    "lower_bound": -34.295,
+    "upper_bound": 115.605,
+    "clipped_low": 0,
+    "clipped_high": 0
+  },
+  "avg_spending": {
+    "lower_bound": -118.39,
+    "upper_bound": 488.13,
+    "clipped_low": 0,
+    "clipped_high": 165
+  },
+  "late_night_activity": {
+    "lower_bound": -60.4725,
+    "upper_bound": 154.0275,
+    "clipped_low": 0,
+    "clipped_high": 0
+  },
+  "impulsive_clicks": {
+    "lower_bound": -7.5,
+    "upper_bound": 20.5,
+    "clipped_low": 0,
+    "clipped_high": 2
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "Budget Conscious": {
+    "engagement_score_mean": 14.6157,
+    "engagement_score_median": 14.0379,
+    "engagement_score_std": 4.8604,
+    "conversion_probability_mean": 0.5671,
+    "conversion_probability_median": 0.5748,
+    "conversion_probability_std": 0.0488,
+    "shopping_intensity_mean": 10.82,
+    "shopping_intensity_median": 10.5898,
+    "shopping_intensity_std": 2.888,
+    "top_engagement_share": 0.2513
+  },
+  "Emotional Buyer": {
+    "engagement_score_mean": 31.2406,
+    "engagement_score_median": 31.4457,
+    "engagement_score_std": 4.589,
+    "conversion_probability_mean": 0.5207,
+    "conversion_probability_median": 0.5175,
+    "conversion_probability_std": 0.05,
+    "shopping_intensity_mean": 19.2843,
+    "shopping_intensity_median": 19.3678,
+    "shopping_intensity_std": 2.744,
+    "top_engagement_share": 0.2516
+  },
+  "Impulsive Buyer": {
+    "engagement_score_mean": 31.8066,
+    "engagement_score_median": 32.0227,
+    "engagement_score_std": 4.9195,
+    "conversion_probability_mean": 0.5047,
+    "conversion_probability_median": 0.5062,
+    "conversion_probability_std": 0.0534,
+    "shopping_intensity_mean": 20.5994,
+    "shopping_intensity_median": 20.6927,
+    "shopping_intensity_std": 3.0295,
+    "top_engagement_share": 0.2515
+  },
+  "Luxury Shopper": {
+    "engagement_score_mean": 15.5783,
+    "engagement_score_median": 15.3443,
+    "engagement_score_std": 5.0207,
+    "conversion_probability_mean": 0.4437,
+    "conversion_probability_median": 0.4414,
+    "conversion_probability_std": 0.0436,
+    "shopping_intensity_mean": 11.5182,
+    "shopping_intensity_median": 11.3593,
+    "shopping_intensity_std": 2.9883,
+    "top_engagement_share": 0.2517
+  },
+  "Window Shopper": {
+    "engagement_score_mean": 24.3024,
+    "engagement_score_median": 24.5339,
+    "engagement_score_std": 4.7998,
+    "conversion_probability_mean": 0.4422,
+    "conversion_probability_median": 0.4382,
+    "conversion_probability_std": 0.0503,
+    "shopping_intensity_mean": 15.9411,
+    "shopping_intensity_median": 16.0912,
+    "shopping_intensity_std": 2.9411,
+    "top_engagement_share": 0.25
+  }
+}

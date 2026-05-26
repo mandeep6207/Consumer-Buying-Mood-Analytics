@@ -1,0 +1,68 @@
+{
+  "missing_columns": [],
+  "summary": {
+    "row_count": 2400,
+    "column_count": 13,
+    "duplicate_users": 0,
+    "missing_values": {
+      "user_id": 0,
+      "age": 0,
+      "gender": 0,
+      "income": 0,
+      "browsing_time": 0,
+      "cart_items": 0,
+      "purchase_frequency": 0,
+      "discount_usage": 0,
+      "avg_spending": 0,
+      "preferred_category": 0,
+      "late_night_activity": 0,
+      "impulsive_clicks": 0,
+      "buying_mood": 0
+    },
+    "class_balance": {
+      "Budget Conscious": 557,
+      "Impulsive Buyer": 505,
+      "Emotional Buyer": 469,
+      "Luxury Shopper": 453,
+      "Window Shopper": 416
+    },
+    "numeric_ranges": {
+      "age": {
+        "min": 18.0,
+        "max": 64.75618594209283
+      },
+      "income": {
+        "min": 18000.0,
+        "max": 169468.01
+      },
+      "browsing_time": {
+        "min": 2.0,
+        "max": 68.95
+      },
+      "cart_items": {
+        "min": 0.0,
+        "max": 18.0
+      },
+      "purchase_frequency": {
+        "min": 0.2,
+        "max": 16.32
+      },
+      "discount_usage": {
+        "min": 0.0,
+        "max": 100.0
+      },
+      "avg_spending": {
+        "min": 15.0,
+        "max": 674.97
+      },
+      "late_night_activity": {
+        "min": 0.0,
+        "max": 100.0
+      },
+      "impulsive_clicks": {
+        "min": 0.0,
+        "max": 25.0
+      }
+    }
+  }
+}

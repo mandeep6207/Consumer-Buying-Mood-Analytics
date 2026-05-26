@@ -1,0 +1,41 @@
+{
+  "segment_counts": {
+    "Balanced Browser": 1186,
+    "Discount Driven": 552,
+    "Premium Explorer": 451,
+    "High Intent": 179,
+    "Low Intent": 32
+  },
+  "segment_means": {
+    "Balanced Browser": {
+      "engagement_score": 28.1938,
+      "conversion_probability": 0.4736,
+      "discount_dependency": 28.9728,
+      "avg_spending": 160.1129
+    },
+    "Discount Driven": {
+      "engagement_score": 15.5579,
+      "conversion_probability": 0.5798,
+      "discount_dependency": 57.297,
+      "avg_spending": 125.2172
+    },
+    "High Intent": {
+      "engagement_score": 35.2869,
+      "conversion_probability": 0.5765,
+      "discount_dependency": 42.1891,
+      "avg_spending": 205.6553
+    },
+    "Low Intent": {
+      "engagement_score": 12.9367,
+      "conversion_probability": 0.4475,
+      "discount_dependency": 31.8111,
+      "avg_spending": 146.6903
+    },
+    "Premium Explorer": {
+      "engagement_score": 16.1105,
+      "conversion_probability": 0.4448,
+      "discount_dependency": 16.5713,
+      "avg_spending": 428.6692
+    }
+  }
+}

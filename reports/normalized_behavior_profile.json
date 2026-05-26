@@ -1,0 +1,34 @@
+{
+  "impulse_score": {
+    "mean": 0.0677,
+    "std": 0.6084
+  },
+  "spending_efficiency": {
+    "mean": 0.3855,
+    "std": 1.2302
+  },
+  "shopping_intensity": {
+    "mean": -0.0007,
+    "std": 0.594
+  },
+  "engagement_score": {
+    "mean": -0.0277,
+    "std": 0.5741
+  },
+  "conversion_probability": {
+    "mean": 0.0059,
+    "std": 0.6306
+  },
+  "browsing_pressure": {
+    "mean": -0.0731,
+    "std": 0.5833
+  },
+  "discount_dependency": {
+    "mean": 0.0916,
+    "std": 0.6772
+  },
+  "emotional_purchase_index": {
+    "mean": 0.2193,
+    "std": 0.539
+  }
+}
