@@ -37,6 +37,7 @@ MISSING_VALUE_REPORT = REPORTS_DIR / "missing_value_profile.json"
 CATEGORICAL_PROFILE_REPORT = REPORTS_DIR / "categorical_profile.json"
 NORMALIZED_BEHAVIOR_REPORT = REPORTS_DIR / "normalized_behavior_profile.json"
 SESSION_ANALYSIS_REPORT = REPORTS_DIR / "session_analysis.json"
+CUSTOMER_SEGMENT_REPORT = REPORTS_DIR / "customer_segments.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -399,6 +400,23 @@ def analyze_session_behavior(dataframe: pd.DataFrame) -> dict[str, Any]:
         night_session_rate=("night_session_ratio", "mean"),
     )
     return grouped.round(4).to_dict(orient="index")
+
+
+
+def segment_customers(dataframe: pd.DataFrame) -> dict[str, Any]:
+    segmented = dataframe.copy()
+    conditions = [
+        (segmented["engagement_score"] >= segmented["engagement_score"].quantile(0.78)) & (segmented["conversion_probability"] >= segmented["conversion_probability"].quantile(0.7)),
+        (segmented["discount_dependency"] >= segmented["discount_dependency"].quantile(0.75)),
+        (segmented["income"] >= segmented["income"].quantile(0.75)) & (segmented["avg_spending"] >= segmented["avg_spending"].quantile(0.72)),
+        (segmented["engagement_score"] <= segmented["engagement_score"].quantile(0.25)) & (segmented["cart_items"] <= segmented["cart_items"].quantile(0.35)),
+    ]
+    choices = ["High Intent", "Discount Driven", "Premium Explorer", "Low Intent"]
+    segmented["segment"] = np.select(conditions, choices, default="Balanced Browser")
+    return {
+        "segment_counts": segmented["segment"].value_counts().to_dict(),
+        "segment_means": segmented.groupby("segment")[["engagement_score", "conversion_probability", "discount_dependency", "avg_spending"]].mean().round(4).to_dict(orient="index"),
+    }
 
 
 
@@ -789,6 +807,8 @@ def evaluate_and_export() -> dict[str, Any]:
     NORMALIZED_BEHAVIOR_REPORT.write_text(json.dumps(behavior_profile, indent=2), encoding="utf-8")
     session_report = analyze_session_behavior(engineered)
     SESSION_ANALYSIS_REPORT.write_text(json.dumps(session_report, indent=2), encoding="utf-8")
+    segment_report = segment_customers(engineered)
+    CUSTOMER_SEGMENT_REPORT.write_text(json.dumps(segment_report, indent=2), encoding="utf-8")
     normalized_preview = normalize_numeric_columns(engineered)
     _ = normalized_preview
 
