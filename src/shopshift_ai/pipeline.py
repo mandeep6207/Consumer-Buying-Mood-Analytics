@@ -34,6 +34,7 @@ METRICS_DIR = ROOT / "metrics"
 SRC_DIR = ROOT / "src"
 DATA_QUALITY_REPORT = REPORTS_DIR / "data_quality.json"
 MISSING_VALUE_REPORT = REPORTS_DIR / "missing_value_profile.json"
+CATEGORICAL_PROFILE_REPORT = REPORTS_DIR / "categorical_profile.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -264,6 +265,25 @@ def clean_data(dataframe: pd.DataFrame) -> pd.DataFrame:
     cleaned["preferred_category"] = cleaned["preferred_category"].fillna("Fashion")
     cleaned[RAW_NUMERIC_FEATURES] = cleaned[RAW_NUMERIC_FEATURES].apply(pd.to_numeric, errors="coerce")
     return cleaned
+
+
+
+def normalize_categorical_fields(dataframe: pd.DataFrame) -> pd.DataFrame:
+    normalized = dataframe.copy()
+    gender_map = {"f": "Female", "m": "Male", "nb": "Non-binary", "nonbinary": "Non-binary"}
+    normalized["gender"] = normalized["gender"].astype(str).str.strip().str.lower().replace(gender_map).str.title().replace({"Non-Binary": "Non-binary"})
+    normalized["preferred_category"] = normalized["preferred_category"].astype(str).str.strip().str.title()
+    canonical_categories = ["Beauty", "Electronics", "Fashion", "Groceries", "Home", "Luxury"]
+    normalized["preferred_category"] = pd.Categorical(normalized["preferred_category"], categories=canonical_categories, ordered=True)
+    return normalized
+
+
+
+def summarize_categorical_distribution(dataframe: pd.DataFrame) -> dict[str, Any]:
+    return {
+        "gender_distribution": dataframe["gender"].value_counts().to_dict(),
+        "preferred_category_distribution": dataframe["preferred_category"].astype(str).value_counts().to_dict(),
+    }
 
 
 
@@ -686,6 +706,9 @@ def evaluate_and_export() -> dict[str, Any]:
     MISSING_VALUE_REPORT.write_text(json.dumps(missing_profile, indent=2), encoding="utf-8")
     cleaned = clean_data(noisy_data)
     imputed = impute_missing_values(cleaned)
+    categorical_profile = summarize_categorical_distribution(imputed)
+    CATEGORICAL_PROFILE_REPORT.write_text(json.dumps(categorical_profile, indent=2), encoding="utf-8")
+    imputed = normalize_categorical_fields(imputed)
     engineered = engineer_features(imputed)
     normalized_preview = normalize_numeric_columns(engineered)
     _ = normalized_preview
