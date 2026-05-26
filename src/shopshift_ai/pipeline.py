@@ -33,6 +33,7 @@ REPORTS_DIR = ROOT / "reports"
 METRICS_DIR = ROOT / "metrics"
 SRC_DIR = ROOT / "src"
 DATA_QUALITY_REPORT = REPORTS_DIR / "data_quality.json"
+MISSING_VALUE_REPORT = REPORTS_DIR / "missing_value_profile.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -273,6 +274,22 @@ def add_missing_values(dataframe: pd.DataFrame, seed: int = RANDOM_STATE) -> pd.
         mask = rng.random(len(with_missing)) < rate
         with_missing.loc[mask, column] = np.nan
     return with_missing
+
+
+
+def summarize_missingness(dataframe: pd.DataFrame) -> dict[str, Any]:
+    missing_counts = dataframe.isna().sum().to_dict()
+    missing_rates = {
+        column: round(float(count) / float(len(dataframe)), 4) if len(dataframe) else 0.0
+        for column, count in missing_counts.items()
+        if count
+    }
+    return {
+        "row_count": int(len(dataframe)),
+        "columns_with_missing": sorted([column for column, count in missing_counts.items() if count]),
+        "missing_counts": missing_counts,
+        "missing_rates": missing_rates,
+    }
 
 
 
@@ -665,6 +682,8 @@ def evaluate_and_export() -> dict[str, Any]:
     DATA_QUALITY_REPORT.write_text(json.dumps(data_quality, indent=2), encoding="utf-8")
 
     noisy_data = add_missing_values(raw_data)
+    missing_profile = summarize_missingness(noisy_data)
+    MISSING_VALUE_REPORT.write_text(json.dumps(missing_profile, indent=2), encoding="utf-8")
     cleaned = clean_data(noisy_data)
     imputed = impute_missing_values(cleaned)
     engineered = engineer_features(imputed)
