@@ -591,10 +591,10 @@ def train_models(train_features: pd.DataFrame, train_target: pd.Series, test_fea
                     (
                         "model",
                         RandomForestClassifier(
-                            n_estimators=280,
-                            max_depth=12,
+                            n_estimators=340,
+                            max_depth=13,
                             min_samples_split=4,
-                            min_samples_leaf=2,
+                            min_samples_leaf=1,
                             class_weight="balanced_subsample",
                             random_state=RANDOM_STATE,
                             n_jobs=-1,
@@ -602,7 +602,7 @@ def train_models(train_features: pd.DataFrame, train_target: pd.Series, test_fea
                     ),
                 ]
             ),
-            {"model__max_depth": [10, 12, 15], "model__min_samples_leaf": [1, 2, 3]},
+            {"model__max_depth": [11, 13, 15], "model__min_samples_leaf": [1, 2], "model__max_features": ["sqrt", 0.75]},
         ),
         "XGBoost": (
             Pipeline(
