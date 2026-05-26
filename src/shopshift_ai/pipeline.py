@@ -21,6 +21,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from xgboost import XGBClassifier
 
+from .validation import validate_dataset
+
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data"
@@ -30,6 +32,7 @@ VISUALS_DIR = ROOT / "visuals"
 REPORTS_DIR = ROOT / "reports"
 METRICS_DIR = ROOT / "metrics"
 SRC_DIR = ROOT / "src"
+DATA_QUALITY_REPORT = REPORTS_DIR / "data_quality.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -658,6 +661,8 @@ def evaluate_and_export() -> dict[str, Any]:
     ensure_directories()
     raw_data = generate_synthetic_dataset()
     raw_data.to_csv(DATA_DIR / "synthetic_shopping_behavior.csv", index=False)
+    data_quality = validate_dataset(raw_data)
+    DATA_QUALITY_REPORT.write_text(json.dumps(data_quality, indent=2), encoding="utf-8")
 
     noisy_data = add_missing_values(raw_data)
     cleaned = clean_data(noisy_data)
