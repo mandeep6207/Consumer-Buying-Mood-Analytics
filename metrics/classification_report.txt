@@ -1,0 +1,11 @@
+                  precision    recall  f1-score   support
+
+ Impulsive Buyer     0.9474    0.9730    0.9600       111
+  Luxury Shopper     0.9294    0.8404    0.8827        94
+Budget Conscious     0.8545    0.9307    0.8910       101
+  Window Shopper     0.9773    0.9451    0.9609        91
+ Emotional Buyer     0.9759    0.9759    0.9759        83
+
+        accuracy                         0.9333       480
+       macro avg     0.9369    0.9330    0.9341       480
+    weighted avg     0.9349    0.9333    0.9333       480
