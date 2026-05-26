@@ -638,11 +638,14 @@ def plot_spending_behavior(dataframe: pd.DataFrame) -> None:
 
 
 def plot_category_preferences(dataframe: pd.DataFrame) -> None:
-    preferred = dataframe.groupby(["preferred_category", TARGET]).size().reset_index(name="count")
+    preferred = dataframe.groupby([TARGET, "preferred_category"]).size().reset_index(name="count")
+    preferred["share"] = preferred.groupby(TARGET)["count"].transform(lambda values: values / values.sum())
+    pivot = preferred.pivot(index=TARGET, columns="preferred_category", values="share").fillna(0)
     plt.figure(figsize=(12, 6))
-    sns.barplot(data=preferred, x="preferred_category", y="count", hue=TARGET, palette="tab10")
-    plt.xticks(rotation=20, ha="right")
-    plt.title("Category Preferences Across Buying Moods")
+    sns.heatmap(pivot, cmap="YlGnBu", annot=True, fmt=".0%", linewidths=0.5)
+    plt.title("Category Preference Share by Buying Mood")
+    plt.xlabel("Preferred Category")
+    plt.ylabel("Buying Mood")
     plt.tight_layout()
     plt.savefig(VISUALS_DIR / "category_preferences.png", dpi=220)
     plt.close()
