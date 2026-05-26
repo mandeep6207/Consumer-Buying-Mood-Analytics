@@ -40,6 +40,7 @@ SESSION_ANALYSIS_REPORT = REPORTS_DIR / "session_analysis.json"
 CUSTOMER_SEGMENT_REPORT = REPORTS_DIR / "customer_segments.json"
 BEHAVIOR_SCALE_REPORT = REPORTS_DIR / "behavior_scale_profile.json"
 OUTLIER_REPORT = REPORTS_DIR / "outlier_profile.json"
+ENGAGEMENT_REPORT = REPORTS_DIR / "engagement_profile.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -467,6 +468,14 @@ def segment_customers(dataframe: pd.DataFrame) -> dict[str, Any]:
 
 
 
+def summarize_engagement(dataframe: pd.DataFrame) -> dict[str, Any]:
+    engagement = dataframe.groupby(TARGET)[["engagement_score", "conversion_probability", "shopping_intensity"]].agg(["mean", "median", "std"])
+    engagement.columns = ["_".join(column).strip("_") for column in engagement.columns.to_flat_index()]
+    engagement["top_engagement_share"] = dataframe.groupby(TARGET)["engagement_score"].apply(lambda series: float((series >= series.quantile(0.75)).mean()))
+    return engagement.round(4).to_dict(orient="index")
+
+
+
 def build_preprocessor() -> ColumnTransformer:
     numeric_pipeline = Pipeline(
         steps=[
@@ -882,6 +891,8 @@ def evaluate_and_export() -> dict[str, Any]:
     SESSION_ANALYSIS_REPORT.write_text(json.dumps(session_report, indent=2), encoding="utf-8")
     segment_report = segment_customers(engineered)
     CUSTOMER_SEGMENT_REPORT.write_text(json.dumps(segment_report, indent=2), encoding="utf-8")
+    engagement_report = summarize_engagement(engineered)
+    ENGAGEMENT_REPORT.write_text(json.dumps(engagement_report, indent=2), encoding="utf-8")
     normalized_preview = normalize_numeric_columns(engineered)
     _ = normalized_preview
 
