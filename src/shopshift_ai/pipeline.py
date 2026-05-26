@@ -18,7 +18,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, f1_score, precision_score, recall_score
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split, cross_validate
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import OneHotEncoder, StandardScaler, RobustScaler
 from xgboost import XGBClassifier
 
 from .validation import validate_dataset
@@ -38,6 +38,7 @@ CATEGORICAL_PROFILE_REPORT = REPORTS_DIR / "categorical_profile.json"
 NORMALIZED_BEHAVIOR_REPORT = REPORTS_DIR / "normalized_behavior_profile.json"
 SESSION_ANALYSIS_REPORT = REPORTS_DIR / "session_analysis.json"
 CUSTOMER_SEGMENT_REPORT = REPORTS_DIR / "customer_segments.json"
+BEHAVIOR_SCALE_REPORT = REPORTS_DIR / "behavior_scale_profile.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -382,9 +383,32 @@ def normalize_behavioral_metrics(dataframe: pd.DataFrame) -> pd.DataFrame:
         "discount_dependency",
         "emotional_purchase_index",
     ]
-    scaler = StandardScaler()
+    scaler = RobustScaler()
     normalized[behavior_columns] = scaler.fit_transform(normalized[behavior_columns])
     return normalized
+
+
+
+def summarize_behavior_scale(dataframe: pd.DataFrame) -> dict[str, Any]:
+    behavior_columns = [
+        "impulse_score",
+        "spending_efficiency",
+        "shopping_intensity",
+        "engagement_score",
+        "conversion_probability",
+        "browsing_pressure",
+        "discount_dependency",
+        "emotional_purchase_index",
+    ]
+    summary = {}
+    for column in behavior_columns:
+        series = dataframe[column]
+        summary[column] = {
+            "median": round(float(series.median()), 4),
+            "iqr": round(float(series.quantile(0.75) - series.quantile(0.25)), 4),
+            "p95": round(float(series.quantile(0.95)), 4),
+        }
+    return summary
 
 
 
@@ -805,6 +829,7 @@ def evaluate_and_export() -> dict[str, Any]:
         ]
     }
     NORMALIZED_BEHAVIOR_REPORT.write_text(json.dumps(behavior_profile, indent=2), encoding="utf-8")
+    BEHAVIOR_SCALE_REPORT.write_text(json.dumps(summarize_behavior_scale(engineered), indent=2), encoding="utf-8")
     session_report = analyze_session_behavior(engineered)
     SESSION_ANALYSIS_REPORT.write_text(json.dumps(session_report, indent=2), encoding="utf-8")
     segment_report = segment_customers(engineered)
