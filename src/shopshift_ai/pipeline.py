@@ -41,6 +41,7 @@ CUSTOMER_SEGMENT_REPORT = REPORTS_DIR / "customer_segments.json"
 BEHAVIOR_SCALE_REPORT = REPORTS_DIR / "behavior_scale_profile.json"
 OUTLIER_REPORT = REPORTS_DIR / "outlier_profile.json"
 ENGAGEMENT_REPORT = REPORTS_DIR / "engagement_profile.json"
+CORRELATION_REPORT = REPORTS_DIR / "advanced_correlation_profile.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -476,6 +477,42 @@ def summarize_engagement(dataframe: pd.DataFrame) -> dict[str, Any]:
 
 
 
+def summarize_advanced_correlations(dataframe: pd.DataFrame) -> dict[str, Any]:
+    corr_columns = [
+        "age",
+        "income",
+        "browsing_time",
+        "cart_items",
+        "purchase_frequency",
+        "discount_usage",
+        "avg_spending",
+        "late_night_activity",
+        "impulsive_clicks",
+        "impulse_score",
+        "shopping_intensity",
+        "engagement_score",
+        "conversion_probability",
+        "discount_dependency",
+        "emotional_purchase_index",
+    ]
+    pearson = dataframe[corr_columns].corr(method="pearson")
+    spearman = dataframe[corr_columns].corr(method="spearman")
+    strongest_pairs = []
+    for left_index, left_name in enumerate(corr_columns):
+        for right_name in corr_columns[left_index + 1 :]:
+            strength = abs(float(spearman.loc[left_name, right_name]))
+            strongest_pairs.append((left_name, right_name, round(strength, 4)))
+    strongest_pairs.sort(key=lambda item: item[2], reverse=True)
+    return {
+        "pearson_focus": pearson.round(4).loc[["engagement_score", "conversion_probability", "discount_dependency"], ["engagement_score", "conversion_probability", "discount_dependency"]].to_dict(),
+        "top_spearman_pairs": [
+            {"left": left, "right": right, "strength": strength}
+            for left, right, strength in strongest_pairs[:10]
+        ],
+    }
+
+
+
 def build_preprocessor() -> ColumnTransformer:
     numeric_pipeline = Pipeline(
         steps=[
@@ -893,6 +930,8 @@ def evaluate_and_export() -> dict[str, Any]:
     CUSTOMER_SEGMENT_REPORT.write_text(json.dumps(segment_report, indent=2), encoding="utf-8")
     engagement_report = summarize_engagement(engineered)
     ENGAGEMENT_REPORT.write_text(json.dumps(engagement_report, indent=2), encoding="utf-8")
+    correlation_report = summarize_advanced_correlations(engineered)
+    CORRELATION_REPORT.write_text(json.dumps(correlation_report, indent=2), encoding="utf-8")
     normalized_preview = normalize_numeric_columns(engineered)
     _ = normalized_preview
 
