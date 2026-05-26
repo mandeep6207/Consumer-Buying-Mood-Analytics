@@ -35,6 +35,7 @@ SRC_DIR = ROOT / "src"
 DATA_QUALITY_REPORT = REPORTS_DIR / "data_quality.json"
 MISSING_VALUE_REPORT = REPORTS_DIR / "missing_value_profile.json"
 CATEGORICAL_PROFILE_REPORT = REPORTS_DIR / "categorical_profile.json"
+NORMALIZED_BEHAVIOR_REPORT = REPORTS_DIR / "normalized_behavior_profile.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -363,6 +364,24 @@ def normalize_numeric_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
     normalized = dataframe.copy()
     scaler = StandardScaler()
     normalized[RAW_NUMERIC_FEATURES] = scaler.fit_transform(normalized[RAW_NUMERIC_FEATURES])
+    return normalized
+
+
+
+def normalize_behavioral_metrics(dataframe: pd.DataFrame) -> pd.DataFrame:
+    normalized = dataframe.copy()
+    behavior_columns = [
+        "impulse_score",
+        "spending_efficiency",
+        "shopping_intensity",
+        "engagement_score",
+        "conversion_probability",
+        "browsing_pressure",
+        "discount_dependency",
+        "emotional_purchase_index",
+    ]
+    scaler = StandardScaler()
+    normalized[behavior_columns] = scaler.fit_transform(normalized[behavior_columns])
     return normalized
 
 
@@ -734,6 +753,24 @@ def evaluate_and_export() -> dict[str, Any]:
     CATEGORICAL_PROFILE_REPORT.write_text(json.dumps(categorical_profile, indent=2), encoding="utf-8")
     imputed = normalize_categorical_fields(imputed)
     engineered = engineer_features(imputed)
+    normalized_behaviors = normalize_behavioral_metrics(engineered)
+    behavior_profile = {
+        column: {
+            "mean": round(float(normalized_behaviors[column].mean()), 4),
+            "std": round(float(normalized_behaviors[column].std(ddof=0)), 4),
+        }
+        for column in [
+            "impulse_score",
+            "spending_efficiency",
+            "shopping_intensity",
+            "engagement_score",
+            "conversion_probability",
+            "browsing_pressure",
+            "discount_dependency",
+            "emotional_purchase_index",
+        ]
+    }
+    NORMALIZED_BEHAVIOR_REPORT.write_text(json.dumps(behavior_profile, indent=2), encoding="utf-8")
     normalized_preview = normalize_numeric_columns(engineered)
     _ = normalized_preview
 
