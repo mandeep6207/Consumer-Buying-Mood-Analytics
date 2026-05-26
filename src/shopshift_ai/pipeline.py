@@ -831,6 +831,13 @@ def export_model_outputs(results: dict[str, ModelResult], best_name: str, best_e
             }
             for name, result in results.items()
         },
+        "model_ranking": [
+            {
+                "name": name,
+                "accuracy_gap_to_best": round(results[best_name].accuracy - result.accuracy, 4),
+            }
+            for name, result in sorted(results.items(), key=lambda item: item[1].accuracy, reverse=True)
+        ],
     }
     (REPORTS_DIR / "model_metrics.json").write_text(json.dumps(metrics_payload, indent=2), encoding="utf-8")
 
@@ -847,9 +854,10 @@ def export_model_outputs(results: dict[str, ModelResult], best_name: str, best_e
         "",
         "## Model Comparison",
     ]
-    for name, result in results.items():
+    ordered_results = sorted(results.items(), key=lambda item: item[1].accuracy, reverse=True)
+    for name, result in ordered_results:
         report_markdown.append(
-            f"- {name}: accuracy={result.accuracy:.4f}, precision={result.precision:.4f}, recall={result.recall:.4f}, f1={result.f1:.4f}, cv={result.cv_accuracy:.4f}"
+            f"- {name}: accuracy={result.accuracy:.4f}, precision={result.precision:.4f}, recall={result.recall:.4f}, f1={result.f1:.4f}, cv={result.cv_accuracy:.4f}, gap={results[best_name].accuracy - result.accuracy:.4f}"
         )
     report_markdown.extend(
         [
