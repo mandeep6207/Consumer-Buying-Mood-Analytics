@@ -42,6 +42,7 @@ BEHAVIOR_SCALE_REPORT = REPORTS_DIR / "behavior_scale_profile.json"
 OUTLIER_REPORT = REPORTS_DIR / "outlier_profile.json"
 ENGAGEMENT_REPORT = REPORTS_DIR / "engagement_profile.json"
 CORRELATION_REPORT = REPORTS_DIR / "advanced_correlation_profile.json"
+SPLIT_PROFILE_REPORT = REPORTS_DIR / "split_profile.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -514,6 +515,24 @@ def summarize_advanced_correlations(dataframe: pd.DataFrame) -> dict[str, Any]:
 
 
 
+def stratified_split(features: pd.DataFrame, target: pd.Series) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series, dict[str, Any]]:
+    train_features, test_features, train_target, test_target = train_test_split(
+        features,
+        target,
+        test_size=0.22,
+        random_state=RANDOM_STATE,
+        stratify=target,
+    )
+    split_profile = {
+        "train_rows": int(len(train_features)),
+        "test_rows": int(len(test_features)),
+        "train_class_balance": train_target.value_counts().to_dict(),
+        "test_class_balance": test_target.value_counts().to_dict(),
+    }
+    return train_features, test_features, train_target, test_target, split_profile
+
+
+
 def build_preprocessor() -> ColumnTransformer:
     numeric_pipeline = Pipeline(
         steps=[
@@ -941,13 +960,8 @@ def evaluate_and_export() -> dict[str, Any]:
     target = engineered[TARGET]
     label_encoder = LabelEncoder()
     encoded_target = label_encoder.fit_transform(target)
-    train_features, test_features, train_target, test_target = train_test_split(
-        features,
-        encoded_target,
-        test_size=0.2,
-        random_state=RANDOM_STATE,
-        stratify=encoded_target,
-    )
+    train_features, test_features, train_target, test_target, split_profile = stratified_split(features, encoded_target)
+    SPLIT_PROFILE_REPORT.write_text(json.dumps(split_profile, indent=2), encoding="utf-8")
 
     results, best_name, best_estimator = train_models(train_features, train_target, test_features, test_target)
 
