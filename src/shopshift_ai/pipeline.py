@@ -36,6 +36,7 @@ DATA_QUALITY_REPORT = REPORTS_DIR / "data_quality.json"
 MISSING_VALUE_REPORT = REPORTS_DIR / "missing_value_profile.json"
 CATEGORICAL_PROFILE_REPORT = REPORTS_DIR / "categorical_profile.json"
 NORMALIZED_BEHAVIOR_REPORT = REPORTS_DIR / "normalized_behavior_profile.json"
+SESSION_ANALYSIS_REPORT = REPORTS_DIR / "session_analysis.json"
 
 RANDOM_STATE = 42
 TARGET = "buying_mood"
@@ -383,6 +384,21 @@ def normalize_behavioral_metrics(dataframe: pd.DataFrame) -> pd.DataFrame:
     scaler = StandardScaler()
     normalized[behavior_columns] = scaler.fit_transform(normalized[behavior_columns])
     return normalized
+
+
+
+def analyze_session_behavior(dataframe: pd.DataFrame) -> dict[str, Any]:
+    session_frame = dataframe.copy()
+    session_frame["session_depth_estimate"] = session_frame["browsing_time"] * 0.55 + session_frame["cart_items"] * 2.1 + session_frame["impulsive_clicks"] * 0.9
+    session_frame["night_session_ratio"] = np.where(session_frame["late_night_activity"] > 50, 1.0, 0.0)
+    grouped = session_frame.groupby(TARGET).agg(
+        browsing_time_mean=("browsing_time", "mean"),
+        cart_items_mean=("cart_items", "mean"),
+        impulsive_clicks_mean=("impulsive_clicks", "mean"),
+        session_depth_mean=("session_depth_estimate", "mean"),
+        night_session_rate=("night_session_ratio", "mean"),
+    )
+    return grouped.round(4).to_dict(orient="index")
 
 
 
@@ -771,6 +787,8 @@ def evaluate_and_export() -> dict[str, Any]:
         ]
     }
     NORMALIZED_BEHAVIOR_REPORT.write_text(json.dumps(behavior_profile, indent=2), encoding="utf-8")
+    session_report = analyze_session_behavior(engineered)
+    SESSION_ANALYSIS_REPORT.write_text(json.dumps(session_report, indent=2), encoding="utf-8")
     normalized_preview = normalize_numeric_columns(engineered)
     _ = normalized_preview
 
