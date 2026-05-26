@@ -613,14 +613,14 @@ def train_models(train_features: pd.DataFrame, train_target: pd.Series, test_fea
                         XGBClassifier(
                             objective="multi:softmax",
                             num_class=len(MOODS),
-                            n_estimators=320,
-                            learning_rate=0.06,
+                            n_estimators=360,
+                            learning_rate=0.05,
                             max_depth=5,
                             subsample=0.9,
                             colsample_bytree=0.85,
-                            reg_lambda=1.2,
-                            reg_alpha=0.2,
-                            min_child_weight=1.8,
+                            reg_lambda=1.6,
+                            reg_alpha=0.3,
+                            min_child_weight=2.0,
                             tree_method="hist",
                             eval_metric="mlogloss",
                             random_state=RANDOM_STATE,
@@ -628,7 +628,7 @@ def train_models(train_features: pd.DataFrame, train_target: pd.Series, test_fea
                     ),
                 ]
             ),
-            {"model__max_depth": [4, 5, 6], "model__learning_rate": [0.05, 0.06, 0.08]},
+            {"model__max_depth": [4, 5, 6], "model__learning_rate": [0.04, 0.05, 0.06], "model__reg_lambda": [1.2, 1.6]},
         ),
     }
 
