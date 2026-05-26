@@ -597,9 +597,23 @@ def get_transformed_feature_names(estimator: Pipeline) -> list[str]:
 def plot_mood_distribution(dataframe: pd.DataFrame) -> None:
     plt.figure(figsize=(11, 6))
     order = dataframe[TARGET].value_counts().index
-    sns.countplot(data=dataframe, x=TARGET, order=order, hue=TARGET, palette="Spectral", legend=False)
+    ax = sns.countplot(data=dataframe, x=TARGET, order=order, hue=TARGET, palette="Spectral", legend=False)
+    total = float(len(dataframe))
+    for patch in ax.patches:
+        height = patch.get_height()
+        if height:
+            ax.annotate(
+                f"{int(height)}\n({height / total:.0%})",
+                (patch.get_x() + patch.get_width() / 2, height),
+                ha="center",
+                va="bottom",
+                fontsize=8,
+                xytext=(0, 3),
+                textcoords="offset points",
+            )
     plt.xticks(rotation=20, ha="right")
     plt.title("Buying Mood Distribution")
+    plt.ylabel("Customer Count")
     plt.tight_layout()
     plt.savefig(VISUALS_DIR / "mood_distribution.png", dpi=220)
     plt.close()
