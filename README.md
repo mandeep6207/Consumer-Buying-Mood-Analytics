@@ -86,14 +86,6 @@ The project evaluates three supervised classifiers on the same leakage-safe prep
 - Random Forest for non-linear interaction capture
 - XGBoost for boosted decision boundary learning
 
-## Results
-
-The current committed benchmark lands in a realistic high-performance range without artificial perfection:
-
-- Best model: XGBoost in the latest exported comparison
-- Accuracy band: roughly 90% to 97%
-- Weighted F1: strong but not saturated, with no 1.00 global metrics
-- Class balance: preserved across all five mood categories through the synthetic generator
 
 The repository also exports supporting analytics artifacts that help explain the model behavior:
 
